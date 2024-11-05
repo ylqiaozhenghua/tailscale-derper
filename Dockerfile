@@ -2,11 +2,12 @@
 FROM golang:alpine AS builder
 
 # 切换模块源为中国Go模块代理服务器
-RUN go env -w GOPROXY=https://goproxy.cn,direct \
-    && go env -w CGO_ENABLED=0
+# RUN go env -w GOPROXY=https://goproxy.cn,direct \
+#     && go env -w CGO_ENABLED=0
 
 # 拉取代码
-RUN go install tailscale.com/cmd/derper@latest
+RUN go env -w CGO_ENABLED=0 && \
+    go install tailscale.com/cmd/derper@latest
 
 # 去除域名验证（删除cmd/derper/cert.go文件的91~93行）
 RUN find /go/pkg/mod/tailscale.com@*/cmd/derper/cert.go -type f -exec sed -i '91,93d' {} +
@@ -32,7 +33,7 @@ ENV LANG=C.UTF-8
 # RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
 
 # 添加源
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 # 安装openssl
 RUN apk add openssl bash && mkdir /opt/ssl/
