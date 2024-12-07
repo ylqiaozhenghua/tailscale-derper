@@ -34,6 +34,34 @@ example docker run command⌘
 docker run -it --rm -e DOMAIN_NAME=test.com -e DERPER_PORT=2333 -p 2333:2333 ghcr.io/expoli/tailscale-derper:main
 ```
 
+## tailscale ACL config example
+
+```json
+	// ... other parts of ACL/Policy JSON
+	"derpMap": {
+		// "OmitDefaultRegions": true,
+		"Regions": {
+			"900": {
+				"RegionID":   900,
+				"RegionCode": "cn",
+				"RegionName": "my-cn-derps",
+				"Nodes": [
+					{
+						"Name":             "Tencent Beijing 1",
+						"RegionID":         900,
+						"HostName":         "xxx.xxx.xxx.xxx",
+						"IPv4":             "xxx.xxx.xxx.xxx",
+						"DERPPort":         443,
+						"STUNPort":         3478,
+						"InsecureForTests": true,
+						"CanPort80":        false,
+					},
+				],
+			},
+		},
+	},
+```
+
 ---
 
 tailscale-derper 原始工具添加了 ssl 证书的验查机制，导致自签名证书无法使用，通过关闭下面的验查机制让 derper 工具能够正常运行。
@@ -66,4 +94,32 @@ docker 运行命令示例⌘
 
 ```bash
 docker run -it --rm -e DOMAIN_NAME=test.com -e DERPER_PORT=2333 -p 2333:2333 ghcr.io/expoli/tailscale-derper:main
+```
+
+## tailscale ACL 配置示例
+
+```json
+	// ... other parts of ACL/Policy JSON
+	"derpMap": {
+		// "OmitDefaultRegions": true,
+		"Regions": {
+			"900": {
+				"RegionID":   900,
+				"RegionCode": "cn",
+				"RegionName": "my-cn-derps",
+				"Nodes": [
+					{
+						"Name":             "Tencent Beijing 1",
+						"RegionID":         900,
+						"HostName":         "xxx.xxx.xxx.xxx",
+						"IPv4":             "xxx.xxx.xxx.xxx",
+						"DERPPort":         443,
+						"STUNPort":         3478,
+						"InsecureForTests": true,
+						"CanPort80":        false,
+					},
+				],
+			},
+		},
+	},
 ```
