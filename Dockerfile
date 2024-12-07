@@ -9,8 +9,8 @@ FROM golang:alpine AS builder
 RUN go env -w CGO_ENABLED=0 && \
     go install tailscale.com/cmd/derper@latest
 
-# 去除域名验证（删除cmd/derper/cert.go文件的91~93行）
-RUN find /go/pkg/mod/tailscale.com@*/cmd/derper/cert.go -type f -exec sed -i '91,93d' {} +
+# 去除域名验证（使用 sed 查找然后直接删除域名验证三行代码）
+RUN sed -i '/if hi.ServerName != m.hostname && !m.noHostname {/,+2d' /go/pkg/mod/tailscale.com@*/cmd/derper/cert.go
 
 # 编译
 RUN derper_dir=$(find /go/pkg/mod/tailscale.com@*/cmd/derper -type d) && \
