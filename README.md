@@ -2,7 +2,15 @@
 
 The original tailscale-derper tool added the validation mechanism of the SSL certificate, which made the self-signed certificate unusable, and the following validation mechanism was turned off to make the Derper tool run normally.
 
-https://github.com/tailscale/tailscale/blob/main/cmd/derper/cert.go#L91-L93
+https://github.com/tailscale/tailscale/blob/main/cmd/derper/cert.go
+
+```go
+func (m *manualCertManager) getCertificate(hi *tls.ClientHelloInfo) (*tls.Certificate, error) {
+	if hi.ServerName != m.hostname && !m.noHostname {
+		return nil, fmt.Errorf("cert mismatch with hostname: %q", hi.ServerName)
+	}
+    ...
+```
 
 The image integrates the automatic certificate generator and automatically generates the SSL self-signed certificate of the corresponding configured domain name according to the CMD parameters in the Dokcerfile, and the default CMD parameters are:
 
@@ -23,14 +31,22 @@ By default, four environment variables are received, and the specific names and 
 example docker run command⌘
 
 ```bash
-docker run -it --rm -e DOMAIN_NAME=test.com -e DERPER_PORT=2333 -p 2333:2333 tangcuyu/tailscale-derper
+docker run -it --rm -e DOMAIN_NAME=test.com -e DERPER_PORT=2333 -p 2333:2333 ghcr.io/expoli/tailscale-derper:main
 ```
 
 ---
 
 tailscale-derper 原始工具添加了 ssl 证书的验查机制，导致自签名证书无法使用，通过关闭下面的验查机制让 derper 工具能够正常运行。
 
-https://github.com/tailscale/tailscale/blob/main/cmd/derper/cert.go#L91-L93
+https://github.com/tailscale/tailscale/blob/main/cmd/derper/cert.go
+
+```go
+func (m *manualCertManager) getCertificate(hi *tls.ClientHelloInfo) (*tls.Certificate, error) {
+	if hi.ServerName != m.hostname && !m.noHostname {
+		return nil, fmt.Errorf("cert mismatch with hostname: %q", hi.ServerName)
+	}
+    ...
+```
 
 该镜像集成了证书自动生成程序，并根据所传入的环境变量自动生成对应配置域名的 ssl 自签证书，你可以通过环境变量来控制 derper 的工作行为。
 默认接收四个环境变量具体的名称与作用如下
@@ -49,5 +65,5 @@ https://github.com/tailscale/tailscale/blob/main/cmd/derper/cert.go#L91-L93
 docker 运行命令示例⌘
 
 ```bash
-docker run -it --rm -e DOMAIN_NAME=test.com -e DERPER_PORT=2333 -p 2333:2333 tangcuyu/tailscale-derper
+docker run -it --rm -e DOMAIN_NAME=test.com -e DERPER_PORT=2333 -p 2333:2333 ghcr.io/expoli/tailscale-derper:main
 ```
