@@ -3,7 +3,7 @@
 set -e
 
 # 使用环境变量设置默认值
-DOMAIN_NAME=${DOMAIN_NAME:-"derper.example.com"}
+DOMAIN_NAME=${DOMAIN_NAME:-"127.0.0.1"}
 DERPER_PORT=${DERPER_PORT:-443}
 COMMAND_LINE=${COMMAND_LINE:-""}
 ADVANCED_MODE=${ADVANCED_MODE:-"false"}
